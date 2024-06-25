@@ -48,7 +48,7 @@ Install this via pip (or your favourite package manager):
 pip install ud-co2s
 ```
 
-![CLI][docs/_static/cli.png]
+![CLI](docs/_static/cli.png)
 
 ## Contributors ✨
 
