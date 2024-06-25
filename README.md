@@ -48,6 +48,12 @@ Install this via pip (or your favourite package manager):
 pip install ud-co2s
 ```
 
+## Usage
+
+```shell
+ud-co2s --plot --log
+```
+
 ![CLI](docs/_static/cli.png)
 
 ## Contributors ✨

@@ -13,7 +13,7 @@ app = typer.Typer()
 
 @app.command()
 def _main(
-    once: Annotated[bool, typer.Option(help="Only print one value")] = False,
+    once: Annotated[bool, typer.Option(help="Only get values once")] = False,
     plot: Annotated[bool, typer.Option(help="Plot the values")] = False,
     log: Annotated[bool, typer.Option(help="Log the values")] = False,
     log_path: Annotated[Path, typer.Option(help="Path to the log file")] = Path(
