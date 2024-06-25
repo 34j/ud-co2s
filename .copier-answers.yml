@@ -9,17 +9,17 @@ email: 34j.95a2p@simplelogin.com
 full_name: 34j
 github_username: 34j
 has_cli: true
-initial_commit: true
+initial_commit: false
 open_source_license: MIT
-open_with_vscode: true
+open_with_vscode: false
 package_name: ud_co2s
 project_name: IODATA UD-CO2S Sensor Data Reader
 project_short_description: Python package for reading sensor data from IODATA UD-CO2S
     or Pocket CO2 Sensor
 project_slug: ud-co2s
-run_poetry_install: true
-setup_github: true
-setup_pre_commit: true
-setup_venv: true
+run_poetry_install: false
+setup_github: false
+setup_pre_commit: false
+setup_venv: false
 venv_version: '3.11'
 

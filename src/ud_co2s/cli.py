@@ -1,12 +1,17 @@
-import typer
-from rich import print
+from typing import Annotated
 
-from .main import add
+import typer
+
+from ._main import read_co2
 
 app = typer.Typer()
 
 
 @app.command()
-def main(n1: int, n2: int) -> None:
-    """Add the arguments and print the result."""
-    print(add(n1, n2))
+def _main(
+    once: Annotated[bool, typer.Option("--once", "-o", help="Only print one value")]
+) -> None:
+    for data in read_co2():
+        typer.echo(data)
+        if once:
+            break
