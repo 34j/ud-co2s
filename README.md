@@ -42,9 +42,19 @@ Python package for reading sensor data from IODATA UD-CO2S or Pocket CO2 Sensor
 
 ## Installation
 
-Install this via pip (or your favourite package manager):
+Install this via pip or pipx (or your favourite package manager):
 
-`pip install ud-co2s`
+```shell
+pipx install ud-co2s
+```
+
+## Usage
+
+```shell
+ud-co2s --plot --log
+```
+
+![CLI](docs/_static/cli.png)
 
 ## Contributors ✨
 
@@ -58,6 +68,21 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-end -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Alternatives
+
+### 非公式
+
+- [bootjp/ud\-co2s\-exporter: IODATA CO2 Sensor UD\-CO2S prometheus exporter](https://github.com/bootjp/ud-co2s-exporter)
+- [jitenshap/IODATA_UD\-CO2S\-Python: IODATA CO2 Sensor data receiver using pyserial](https://github.com/jitenshap/IODATA_UD-CO2S-Python)
+- [Raspberry Piを使った温湿度CO2濃度ロガーの製作 \- 白旗製作所](https://dededemio.hatenablog.jp/entry/2024/03/13/012629#22-UD-CO2S%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E8%AA%BF%E6%9F%BB)
+- [rubyでRaspberry piに繋いだIO dataのCO2センサから値を読み出す。 \#Ruby \- Qiita](https://qiita.com/tatsushi/items/42903f1113cd5c1f8891)
+
+### 公式
+
+- [Pocket CO2 Sensor Windows10アプリ](http://www.google.com/url?q=http%3A%2F%2Fradiation-watch.sakuraweb.com%2Fshare%2Fco2%2FPocketCO2SensorPro.exe&sa=D&sntz=1&usg=AOvVaw0PZSKJ8zRAljo4TmzzrWlh)
+- [Pocket CO2 Sensor – Apps on Google Play](https://play.google.com/store/apps/details?id=org.radiation_watch.co2checker)
+- [CO2換気モニター \| ソフトウェア \| サポートライブラリ \| アイ・オー・データ機器 I\-O DATA](https://www.iodata.jp/lib/software/c/2284.htm)
 
 ## Credits
 

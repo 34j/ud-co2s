@@ -26,9 +26,14 @@ packages = [
 ud-co2s = "ud_co2s.cli:app"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 rich = ">=10"
 typer = {extras = ["all"], version = "^0.9.0"}
+pyserial = "^3.5"
+aioserial = "^1.3.1"
+attrs = "^23.2.0"
+pytest-asyncio = "^0.23.7"
+plotext = "^5.2.8"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0"
