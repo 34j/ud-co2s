@@ -44,7 +44,11 @@ Python package for reading sensor data from IODATA UD-CO2S or Pocket CO2 Sensor
 
 Install this via pip (or your favourite package manager):
 
-`pip install ud-co2s`
+```shell
+pip install ud-co2s
+```
+
+![CLI][docs/_static/cli.png]
 
 ## Contributors ✨
 
