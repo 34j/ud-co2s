@@ -34,7 +34,7 @@ def _main(
         if log:
             with log_path.open("a") as file:
                 file.write(
-                    f"{datetime.now().isoformat()},{data.co2_ppm},"
+                    f"{datetime.now().astimezone().isoformat()},{data.co2_ppm},"
                     f"{data.humidity_percent},{data.temperature}\n"
                 )
         if plot:
