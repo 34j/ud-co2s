@@ -1,3 +1,4 @@
+import itertools
 import re
 import warnings
 from typing import AsyncIterable, Iterable
@@ -38,7 +39,7 @@ def _find_port() -> str:
     return candidates[0].device
 
 
-def read_co2(count: int = 1, port: str | None = None) -> Iterable[CO2Data]:
+def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data]:
     """
     Read CO2 data from the sensor.
 
@@ -69,34 +70,41 @@ def read_co2(count: int = 1, port: str | None = None) -> Iterable[CO2Data]:
     port = port or _find_port()
 
     # connect to the sensor
-    with serial.Serial(
-        port=port,
-        baudrate=9600,
-        bytesize=8,
-    ) as seri:
-        # Reset the sensor
-        seri.write(b"STA\r\n")
-        status = seri.read_until(b"\r\n")
-        if "STA" not in status.decode():
-            raise RuntimeError(f"Invalid status: {status}")
+    try:
+        with serial.Serial(
+            port=port,
+            baudrate=9600,
+            bytesize=8,
+        ) as seri:
+            # Reset the sensor
+            # seri.write(b"STP\r\n")
+            seri.write(b"STA\r\n")
+            status = seri.read_until(b"\r\n")
+            if "STA" not in status.decode():
+                raise RuntimeError(f"Invalid status: {status}")
 
-        # read the CO2 data
-        for _ in range(count):
-            text = seri.read_until(b"\r\n")
-            # CO2=1000,HUM=50.0,TMP=25.0
-            match = re.match(r"CO2=(\d+),HUM=(\d+\.\d+),TMP=(\d+\.\d+)", text.decode())
-            if not match:
-                raise RuntimeError(f"Invalid data: {text}")
-            yield CO2Data(
-                co2_ppm=int(match.group(1)),
-                humidity_percent=float(match.group(2)),
-                temperature=float(match.group(3)),
-            )
+            # read the CO2 data
+            for i in itertools.count():
+                if count is not None and i >= count:
+                    break
+                text = seri.read_until(b"\r\n")
+                # CO2=1000,HUM=50.0,TMP=25.0
+                match = re.match(
+                    r"CO2=(\d+),HUM=(\d+\.\d+),TMP=(\d+\.\d+)", text.decode()
+                )
+                if not match:
+                    raise RuntimeError(f"Invalid data: {text}")
+                yield CO2Data(
+                    co2_ppm=int(match.group(1)),
+                    humidity_percent=float(match.group(2)),
+                    temperature=float(match.group(3)),
+                )
+    finally:
         seri.write(b"STP\r\n")
 
 
 async def read_co2_async(
-    count: int = 1, port: str | None = None
+    count: int | None = 1, port: str | None = None
 ) -> AsyncIterable[CO2Data]:
     """
     Read CO2 data from the sensor.
@@ -130,21 +138,26 @@ async def read_co2_async(
     # connect to the sensor
     seri = aioserial.AioSerial(port=port, baudrate=9600, bytesize=8)
 
-    # Reset the sensor
-    await seri.write_async(b"STA\r\n")
-    status = await seri.read_until_async(b"\r\n")
-    if "STA" not in status.decode():
-        raise RuntimeError(f"Invalid status: {status}")
+    try:
+        # Reset the sensor
+        # await seri.write_async(b"STP\r\n")
+        await seri.write_async(b"STA\r\n")
+        status = await seri.read_until_async(b"\r\n")
+        if "STA" not in status.decode():
+            raise RuntimeError(f"Invalid status: {status}")
 
-    # read the CO2 data
-    for _ in range(count):
-        text = await seri.read_until_async(b"\r\n")
-        match = re.match(r"CO2=(\d+),HUM=(\d+\.\d+),TMP=(\d+\.\d+)", text.decode())
-        if not match:
-            raise RuntimeError(f"Invalid data: {text}")
-        yield CO2Data(
-            co2_ppm=int(match.group(1)),
-            humidity_percent=float(match.group(2)),
-            temperature=float(match.group(3)),
-        )
-    await seri.write_async(b"STP\r\n")
+        # read the CO2 data
+        for i in itertools.count():
+            if count is not None and i >= count:
+                break
+            text = await seri.read_until_async(b"\r\n")
+            match = re.match(r"CO2=(\d+),HUM=(\d+\.\d+),TMP=(\d+\.\d+)", text.decode())
+            if not match:
+                raise RuntimeError(f"Invalid data: {text}")
+            yield CO2Data(
+                co2_ppm=int(match.group(1)),
+                humidity_percent=float(match.group(2)),
+                temperature=float(match.group(3)),
+            )
+    finally:
+        await seri.write_async(b"STP\r\n")
