@@ -26,7 +26,7 @@ packages = [
 ud-co2s = "ud_co2s.cli:app"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 rich = ">=10"
 typer = {extras = ["all"], version = "^0.9.0"}
 pyserial = "^3.5"
