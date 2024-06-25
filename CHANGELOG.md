@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.1 (2024-06-25)
+
+### Fix
+
+- Update pre-commit hook pre-commit/pre-commit-hooks to v4.6.0 (#8) ([`26ad4be`](https://github.com/34j/ud-co2s/commit/26ad4be974460a499d9a891dbd37a6dd099c1508))
+
 ## v0.1.0 (2024-06-25)
 
 ### Feature
