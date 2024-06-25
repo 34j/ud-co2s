@@ -1,4 +1,5 @@
 from datetime import datetime
+from pathlib import Path
 from typing import Annotated
 
 import plotext as plt
@@ -14,6 +15,10 @@ app = typer.Typer()
 def _main(
     once: Annotated[bool, typer.Option(help="Only print one value")] = False,
     plot: Annotated[bool, typer.Option(help="Plot the values")] = False,
+    log: Annotated[bool, typer.Option(help="Log the values")] = False,
+    log_path: Annotated[Path, typer.Option(help="Path to the log file")] = Path(
+        "ud-co2s.log"
+    ),
 ) -> None:
     c = Console()
     if plot:
@@ -26,6 +31,12 @@ def _main(
             f"Humidity: {data.humidity_percent}%, "
             f"Temperature: {data.temperature}°C"
         )
+        if log:
+            with log_path.open("a") as file:
+                file.write(
+                    f"{datetime.now().isoformat()},{data.co2_ppm},"
+                    f"{data.humidity_percent},{data.temperature}\n"
+                )
         if plot:
             ppms.append(data.co2_ppm)
             dates.append(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
