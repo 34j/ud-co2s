@@ -1,25 +1,59 @@
+import threading
 from datetime import datetime
 from pathlib import Path
 from typing import Annotated
 
+import numpy as np
 import plotext as plt
+import pystray
+import seaborn as sns
 import typer
+from PIL import Image, ImageDraw, ImageFont
 from rich.console import Console
 
 from ._main import read_co2
 
+global pystray_icon
+pystray_icon: pystray.Icon
 app = typer.Typer()
 
 
-@app.command()
-def _main(
-    once: Annotated[bool, typer.Option(help="Only get values once")] = False,
-    plot: Annotated[bool, typer.Option(help="Plot the values")] = False,
-    log: Annotated[bool, typer.Option(help="Log the values")] = False,
-    log_path: Annotated[Path, typer.Option(help="Path to the log file")] = Path(
-        "ud-co2s.log"
-    ),
-    port: Annotated[str, typer.Option(help="The serial port to use")] = "",
+def _create_icon_image(value: int, *, width: int = 64, height: int = 64) -> Image:
+    # create image
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    dc = ImageDraw.Draw(image)
+
+    # load font
+    font = ImageFont.load_default(40)
+
+    # set color based on value
+    palette = sns.color_palette("Spectral", as_cmap=True)
+    color = palette(1 - np.clip((value - 440) / 1000, 0.0, 1.0))
+    color = tuple(int(255 * c) for c in color)
+
+    # draw text
+    two_lines = value >= 1000
+    if two_lines:
+        margin = (-4, -8)
+        dc.text((margin[0], margin[1]), f"{value // 100:0>2}", fill=color, font=font)
+        dc.text(
+            (margin[0], 32 + margin[1]), f"{value % 100:0>2}", fill=color, font=font
+        )
+    else:
+        dc.text((-4, 15), f"{value}", fill=color, font=font)
+
+    # return image
+    return image
+
+
+def _main_task(
+    once: bool,
+    plot: bool,
+    log: bool,
+    log_path: Path,
+    port: str,
+    icon: bool,
+    notify_ppm: int,
 ) -> None:
     c = Console()
     if plot:
@@ -53,4 +87,32 @@ def _main(
                     plt.show()
                 except Exception as e:
                     c.print(e)
-                    pass
+        if icon:
+            global pystray_icon
+            pystray_icon.remove_notification()
+            pystray_icon.icon = _create_icon_image(data.co2_ppm)
+            if data.co2_ppm > notify_ppm:
+                pystray_icon.notify(f"CO2: {data.co2_ppm} ppm")
+
+
+@app.command()
+def _main(
+    once: Annotated[bool, typer.Option(help="Only get values once")] = False,
+    plot: Annotated[bool, typer.Option(help="Plot the values")] = False,
+    log: Annotated[bool, typer.Option(help="Log the values")] = False,
+    log_path: Annotated[Path, typer.Option(help="Path to the log file")] = Path(
+        "ud-co2s.log"
+    ),
+    port: Annotated[str, typer.Option(help="The serial port to use")] = "",
+    icon: Annotated[bool, typer.Option(help="Show the icon")] = True,
+    notify_ppm: Annotated[int, typer.Option(help="The CO2 ppm to notify")] = 1000,
+) -> None:
+    if icon:
+        global pystray_icon
+        pystray_icon = pystray.Icon("UD-CO2S", icon=_create_icon_image(0))
+        threading.Thread(
+            target=_main_task, args=(once, plot, log, log_path, port, icon, notify_ppm)
+        ).start()
+        pystray_icon.run()
+    else:
+        _main_task(once, plot, log, log_path, port, icon, notify_ppm)
