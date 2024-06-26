@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.2 (2024-06-26)
+
+### Fix
+
+- Add port option ([`34d4576`](https://github.com/34j/ud-co2s/commit/34d45769bc571d6215d693cc248282d7482bdac1))
+
 ## v0.1.1 (2024-06-25)
 
 ### Fix
