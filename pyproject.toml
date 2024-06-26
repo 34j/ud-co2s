@@ -38,7 +38,7 @@ pystray = "^0.19.5"
 seaborn = "^0.13.2"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.0"
+pytest = "^8.0.0"
 pytest-cov = "^3.0"
 
 [tool.poetry.group.docs]
