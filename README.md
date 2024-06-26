@@ -56,6 +56,8 @@ ud-co2s --plot --log
 
 ![CLI](docs/_static/cli.png)
 
+![Icon](docs/_static/icon.png)
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
