@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.0 (2024-06-26)
+
+### Feature
+
+- Use pystray (#17) ([`b2baeb7`](https://github.com/34j/ud-co2s/commit/b2baeb755354980396793fb1e0e331acc5452e40))
+
 ## v0.1.2 (2024-06-26)
 
 ### Fix
