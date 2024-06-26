@@ -19,12 +19,13 @@ def _main(
     log_path: Annotated[Path, typer.Option(help="Path to the log file")] = Path(
         "ud-co2s.log"
     ),
+    port: Annotated[str, typer.Option(help="The serial port to use")] = "",
 ) -> None:
     c = Console()
     if plot:
         dates = []
         ppms = []
-    for data in read_co2(1 if once else None):
+    for data in read_co2(count=1 if once else None, port=None if port == "" else port):
         c.clear()
         c.print(
             f"CO2: {data.co2_ppm} ppm, "
