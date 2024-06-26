@@ -1,11 +1,10 @@
 import threading
 from datetime import datetime
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Any
 
 import numpy as np
 import plotext as plt
-import pystray
 import seaborn as sns
 import typer
 from PIL import Image, ImageDraw, ImageFont
@@ -14,7 +13,7 @@ from rich.console import Console
 from ._main import read_co2
 
 global pystray_icon
-pystray_icon: pystray.Icon
+pystray_icon: Any
 app = typer.Typer()
 
 
@@ -109,6 +108,8 @@ def _main(
     notify_ppm: Annotated[int, typer.Option(help="The CO2 ppm to notify")] = 1000,
 ) -> None:
     if icon:
+        import pystray
+
         global pystray_icon
         pystray_icon = pystray.Icon("UD-CO2S", icon=_create_icon_image(0))
         threading.Thread(
