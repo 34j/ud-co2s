@@ -17,11 +17,42 @@ class CO2Data:
 
     co2_ppm: int
     """The CO2 concentration in parts per million."""
-    humidity_percent: float
+    humidity: float
     """The relative humidity in percent."""
     temperature: float
     """The temperature is for calibration purposes
     and might be higher than the actual room temperature."""
+
+    @property
+    def temperature_calibrated(self) -> float:
+        return self.temperature - 4.5
+
+    @property
+    def humidity_calibrated(self) -> float:
+        abs_humidity = (
+            216.7
+            * (
+                self.humidity
+                / 100
+                * 6.112
+                * pow(2.71828, (17.62 * self.temperature) / (243.12 + self.temperature))
+            )
+            / (273.15 + self.temperature)
+        )
+        new_humidity = (
+            (abs_humidity * (273.15 + self.temperature_calibrated))
+            / (
+                216.7
+                * 6.112
+                * pow(
+                    2.71828,
+                    (17.62 * self.temperature_calibrated)
+                    / (243.12 + self.temperature_calibrated),
+                )
+            )
+            * 100
+        )
+        return new_humidity
 
 
 def _find_port() -> str:
@@ -98,7 +129,7 @@ def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data
                     raise RuntimeError(f"Invalid data: {text}")
                 yield CO2Data(
                     co2_ppm=int(match.group(1)),
-                    humidity_percent=float(match.group(2)),
+                    humidity=float(match.group(2)),
                     temperature=float(match.group(3)),
                 )
     finally:
@@ -158,7 +189,7 @@ async def read_co2_async(
                 raise RuntimeError(f"Invalid data: {text}")
             yield CO2Data(
                 co2_ppm=int(match.group(1)),
-                humidity_percent=float(match.group(2)),
+                humidity=float(match.group(2)),
                 temperature=float(match.group(3)),
             )
     finally:

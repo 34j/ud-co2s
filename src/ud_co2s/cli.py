@@ -63,14 +63,15 @@ def _main_task(
         c.clear()
         c.print(
             f"CO2: {data.co2_ppm} ppm, "
-            f"Humidity: {data.humidity_percent}%, "
-            f"Temperature: {data.temperature}°C"
+            f"Humidity: {data.humidity_calibrated:.1f}%, "
+            f"Temperature: {data.temperature_calibrated:.1f}°C"
         )
         if log:
             with log_path.open("a") as file:
                 file.write(
                     f"{datetime.now().astimezone().isoformat()},{data.co2_ppm},"
-                    f"{data.humidity_percent},{data.temperature}\n"
+                    f"{data.humidity_calibrated},{data.temperature_calibrated},"
+                    f"{data.humidity},{data.temperature}\n"
                 )
         if plot:
             ppms.append(data.co2_ppm)
