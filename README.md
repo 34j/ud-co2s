@@ -58,6 +58,24 @@ ud-co2s --plot --log
 
 ![Icon](docs/_static/icon.png)
 
+## Run on startup
+
+```shell
+npm install -g nodemon
+```
+
+`%appdata%/Microsoft/Windows/Start Menu/Programs/Startup/ud-co2s.bat`:
+
+```shell
+nodemon -x "ud-co2s --log --plot --icon --log-path %localappdata%/ud-co2s/ud-co2s.log || touch %localappdata%/ud-co2s/ud-co2s.lock" --watch "%LOCALAPPDATA%/ud-co2s/ud-co2s.lock"
+```
+
+(If powershell):
+
+```shell
+nodemon -x "ud-co2s --log --plot --icon --log-path %localappdata%/ud-co2s/ud-co2s.log || touch %localappdata%/ud-co2s/ud-co2s.lock" --watch "$env:LOCALAPPDATA/ud-co2s/ud-co2s.lock"
+```
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
