@@ -1,19 +1,28 @@
 import threading
 from datetime import datetime
+from logging import getLogger
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated
 
 import numpy as np
 import plotext as plt
 import seaborn as sns
 import typer
+import unhandled_exit
 from PIL import Image, ImageDraw, ImageFont
 from rich.console import Console
 
-from ._main import read_co2
+from ._main import CO2Data, read_co2
 
+LOG = getLogger(__name__)
+try:
+    import pystray
+except Exception as e:
+    LOG.exception(e)
 global pystray_icon
-pystray_icon: Any
+global current_data
+current_data: CO2Data
+pystray_icon: "pystray.Icon"
 app = typer.Typer()
 
 
@@ -89,10 +98,13 @@ def _main_task(
                     c.print(e)
         if icon:
             global pystray_icon
-            pystray_icon.remove_notification()
+            global current_data
+            current_data = data
             pystray_icon.icon = _create_icon_image(data.co2_ppm)
-            if data.co2_ppm > notify_ppm:
-                pystray_icon.notify(f"CO2: {data.co2_ppm} ppm")
+            if pystray_icon.HAS_NOTIFICATION:
+                pystray_icon.remove_notification()
+                if data.co2_ppm > notify_ppm:
+                    pystray_icon.notify(f"CO2: {data.co2_ppm} ppm")
 
 
 @app.command()
@@ -107,13 +119,41 @@ def _main(
     icon: Annotated[bool, typer.Option(help="Show the icon")] = True,
     notify_ppm: Annotated[int, typer.Option(help="The CO2 ppm to notify")] = 1000,
 ) -> None:
+    unhandled_exit.activate()
     if icon:
-        import pystray
-
         global pystray_icon
-        pystray_icon = pystray.Icon("UD-CO2S", icon=_create_icon_image(0))
+        pystray_icon = pystray.Icon(
+            "UD-CO2S", icon=_create_icon_image(0), title="UD-CO2S"
+        )
+        pystray_icon.menu = pystray.Menu(
+            *(
+                [
+                    pystray.MenuItem(
+                        "Notify",
+                        lambda: pystray_icon.notify(
+                            f"CO2: {current_data.co2_ppm} ppm, "
+                            f"Humidity: {current_data.humidity_calibrated:.1f}%, "
+                            f"Temperature: {current_data.temperature_calibrated:.1f}°C"
+                        ),
+                        default=pystray_icon.HAS_DEFAULT_ACTION,
+                        # visible=not pystray_icon.HAS_DEFAULT_ACTION,
+                    )
+                ]
+                if pystray_icon.HAS_NOTIFICATION
+                else []
+            )
+            + [
+                pystray.MenuItem(
+                    "Exit",
+                    lambda: pystray_icon.stop(),
+                )
+            ]
+        )
+        pystray_icon.update_menu()
         threading.Thread(
-            target=_main_task, args=(once, plot, log, log_path, port, icon, notify_ppm)
+            target=_main_task,
+            args=(once, plot, log, log_path, port, icon, notify_ppm),
+            daemon=True,
         ).start()
         pystray_icon.run()
     else:

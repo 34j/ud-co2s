@@ -58,6 +58,24 @@ ud-co2s --plot --log
 
 ![Icon](docs/_static/icon.png)
 
+## Run on startup
+
+```shell
+npm install -g nodemon
+```
+
+`%appdata%/Microsoft/Windows/Start Menu/Programs/Startup/ud-co2s.bat`:
+
+```shell
+nodemon -x "ud-co2s --log --plot --icon --log-path %localappdata%/ud-co2s/ud-co2s.log || touch %localappdata%/ud-co2s/ud-co2s.lock" --watch "%LOCALAPPDATA%/ud-co2s/ud-co2s.lock"
+```
+
+(If powershell):
+
+```shell
+nodemon -x "ud-co2s --log --plot --icon --log-path %localappdata%/ud-co2s/ud-co2s.log || touch %localappdata%/ud-co2s/ud-co2s.lock" --watch "$env:LOCALAPPDATA/ud-co2s/ud-co2s.lock"
+```
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -76,6 +94,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 ### 非公式
 
 - [bootjp/ud\-co2s\-exporter: IODATA CO2 Sensor UD\-CO2S prometheus exporter](https://github.com/bootjp/ud-co2s-exporter)
+- [northeye/chissoku: A CO2 Sensor \(IO\-DATA UD\-CO2S\) Reader using USB serial\.](https://github.com/northeye/chissoku)
 - [jitenshap/IODATA_UD\-CO2S\-Python: IODATA CO2 Sensor data receiver using pyserial](https://github.com/jitenshap/IODATA_UD-CO2S-Python)
 - [Raspberry Piを使った温湿度CO2濃度ロガーの製作 \- 白旗製作所](https://dededemio.hatenablog.jp/entry/2024/03/13/012629#22-UD-CO2S%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E8%AA%BF%E6%9F%BB)
 - [rubyでRaspberry piに繋いだIO dataのCO2センサから値を読み出す。 \#Ruby \- Qiita](https://qiita.com/tatsushi/items/42903f1113cd5c1f8891)
