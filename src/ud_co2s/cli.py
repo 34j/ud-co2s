@@ -7,6 +7,7 @@ import numpy as np
 import plotext as plt
 import seaborn as sns
 import typer
+import unhandled_exit
 from PIL import Image, ImageDraw, ImageFont
 from rich.console import Console
 
@@ -107,13 +108,16 @@ def _main(
     icon: Annotated[bool, typer.Option(help="Show the icon")] = True,
     notify_ppm: Annotated[int, typer.Option(help="The CO2 ppm to notify")] = 1000,
 ) -> None:
+    unhandled_exit.activate()
     if icon:
         import pystray
 
         global pystray_icon
         pystray_icon = pystray.Icon("UD-CO2S", icon=_create_icon_image(0))
         threading.Thread(
-            target=_main_task, args=(once, plot, log, log_path, port, icon, notify_ppm)
+            target=_main_task,
+            args=(once, plot, log, log_path, port, icon, notify_ppm),
+            daemon=True,
         ).start()
         pystray_icon.run()
     else:
