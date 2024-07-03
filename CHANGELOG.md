@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.1 (2024-07-03)
+
+### Fix
+
+- Handle exception (#20) ([`00402e4`](https://github.com/34j/ud-co2s/commit/00402e48693a7fe2bbfcc1f31b2c87c9306bf48a))
+- Update dependency typer to ^0.12.0 (#12) ([`ff1b4ea`](https://github.com/34j/ud-co2s/commit/ff1b4eabab15f3e7ce88c9d5c03fbc1b67539149))
+
 ## v0.2.0 (2024-06-26)
 
 ### Feature

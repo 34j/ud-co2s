@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ud-co2s"
-version = "0.2.0"
+version = "0.2.1"
 description = "Python package for reading sensor data from IODATA UD-CO2S or Pocket CO2 Sensor"
 authors = ["34j <34j.95a2p@simplelogin.com>"]
 license = "MIT"
