@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Annotated
 
 import numpy as np
+import pandas as pd
 import plotext as plt
 import seaborn as sns
 import typer
@@ -26,9 +27,15 @@ pystray_icon: "pystray.Icon"
 app = typer.Typer()
 
 
-def _create_icon_image(value: int, *, width: int = 64, height: int = 64) -> Image:
+def _create_icon_image(
+    value: int,
+    *,
+    width: int = 64,
+    height: int = 64,
+    background_color: float | tuple[float, ...] | str | None = 0,
+) -> Image.Image:
     # create image
-    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    image = Image.new("RGBA", (width, height), background_color)
     dc = ImageDraw.Draw(image)
 
     # load font
@@ -65,14 +72,55 @@ def _main_task(
 ) -> None:
     c = Console()
     if plot:
-        dates = []
-        ppms = []
+        dates: list[datetime] = []
+        dates_formatted: list[str] = []
+        ppms: list[int] = []
+        # data_hist = pd.read_csv(log_path, header=None,
+        # names=["date", "co2", "humidity", "temperature",
+        # "humidity_raw", "temperature_raw"])
     for data in read_co2(count=1 if once else None, port=None if port == "" else port):
         c.clear()
+        ppm_diff_per_hour = 0.0
+        RMR_est = 0.0
+        ventelation_per_hour = 0.0
+        if plot and len(ppms) > 0:
+            diff_time = pd.Timedelta("1min")
+            dates_ = np.array(dates[-100:])
+            ppms_ = np.array(ppms[-100:])
+
+            diffs = np.abs(pd.Timestamp.now() - np.array(dates_) - diff_time)
+            diff_time_before_idx = np.argmin(diffs)
+            diff_time_before = diffs[diff_time_before_idx] + diff_time
+            diff_time_before_ppm = ppms_[diff_time_before_idx]
+            ppm_diff = data.co2_ppm - diff_time_before_ppm
+            ppm_diff_per_hour = ppm_diff / (diff_time_before / pd.Timedelta("1h"))
+
+            n_tatami_mats = 6
+            n_human = 1
+            v = 1.62 * 2.44 * n_tatami_mats
+
+            # estimated RMR
+            co2_per_hour_est = ppm_diff_per_hour * 1e-6 * v
+            RMR_est = co2_per_hour_est / 0.0132 / n_human - 1
+
+            # estimated ventilation per hour
+            RMR = 0
+            co2_per_hour = (RMR + 1) * 0.0132 * n_human
+            out_ppm = 440
+            ventelation_per_hour = (
+                (co2_per_hour - co2_per_hour_est) / (data.co2_ppm - out_ppm) * 1e6
+            )
         c.print(
             f"CO2: {data.co2_ppm} ppm, "
             f"Humidity: {data.humidity_calibrated:.1f}%, "
             f"Temperature: {data.temperature_calibrated:.1f}°C"
+            + (
+                f", PPM Diff: {ppm_diff_per_hour:.1f} ppm/h, "
+                f"RMR: {RMR_est:.1f}, "
+                f"Ventelation: {ventelation_per_hour:.1f} m^3/h"
+                if plot
+                else ""
+            )
         )
         if log:
             with log_path.open("a") as file:
@@ -81,9 +129,22 @@ def _main_task(
                     f"{data.humidity_calibrated},{data.temperature_calibrated},"
                     f"{data.humidity},{data.temperature}\n"
                 )
+                # data_hist.append(
+                #     {
+                #         "date": datetime.now().astimezone().isoformat(),
+                #         "co2": data.co2_ppm,
+                #         "humidity": data.humidity_calibrated,
+                #         "temperature": data.temperature_calibrated,
+                #         "humidity_raw": data.humidity,
+                #         "temperature_raw": data.temperature,
+                #     }
+                # )
         if plot:
+            # dates = data_hist["date"].dt.strftime("%Y/%m/%d %H:%M:%S")
+            # ppms = data_hist["co2"]
             ppms.append(data.co2_ppm)
-            dates.append(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+            dates.append(pd.Timestamp.now())
+            dates_formatted.append(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
             if len(ppms) > 2:
                 try:
                     plt.clear_figure()
@@ -92,7 +153,7 @@ def _main_task(
                     plt.ticks_color("white")
                     plt.plot_size(height=(plt.terminal_height() or 10) - 2)
                     plt.date_form("Y/m/d H:M:S")
-                    plt.plot(dates, ppms)
+                    plt.plot(dates_formatted, ppms)
                     plt.show()
                 except Exception as e:
                     c.print(e)
@@ -100,18 +161,23 @@ def _main_task(
             global pystray_icon
             global current_data
             current_data = data
-            pystray_icon.icon = _create_icon_image(data.co2_ppm)
+            background_color = (0, 0, 0, 0)
             if pystray_icon.HAS_NOTIFICATION:
-                pystray_icon.remove_notification()
                 if data.co2_ppm > notify_ppm:
-                    pystray_icon.notify(f"CO2: {data.co2_ppm} ppm")
+                    background_color = (255, 0, 0, 255)
+            pystray_icon.icon = _create_icon_image(
+                data.co2_ppm, background_color=background_color
+            )
+            pystray_icon.title = (
+                f"{data.temperature_calibrated:.1f}°C, {data.humidity_calibrated:.1f}%"
+            )
 
 
 @app.command()
 def _main(
     once: Annotated[bool, typer.Option(help="Only get values once")] = False,
-    plot: Annotated[bool, typer.Option(help="Plot the values")] = False,
-    log: Annotated[bool, typer.Option(help="Log the values")] = False,
+    plot: Annotated[bool, typer.Option(help="Plot the values")] = True,
+    log: Annotated[bool, typer.Option(help="Log the values")] = True,
     log_path: Annotated[Path, typer.Option(help="Path to the log file")] = Path(
         "ud-co2s.log"
     ),
