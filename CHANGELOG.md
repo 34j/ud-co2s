@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.2 (2024-07-17)
+
+### Fix
+
+- Update dependency pytest-asyncio to v0.23.8 (#30) ([`5e43f90`](https://github.com/34j/ud-co2s/commit/5e43f909e6d6dc793246ddf53ea55bd95f6f8e52))
+
 ## v0.2.1 (2024-07-03)
 
 ### Fix
