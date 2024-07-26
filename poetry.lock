@@ -390,6 +390,23 @@ files = [
 ]
 
 [[package]]
+name = "earthkit-meteo"
+version = "0.1.0"
+description = "Meteorological computations"
+optional = false
+python-versions = "*"
+files = [
+    {file = "earthkit_meteo-0.1.0-py3-none-any.whl", hash = "sha256:170249c83c9a5a9f1dd3f980e7bc114d8cd3e0bd84141a4da34ab00bfdbebde9"},
+    {file = "earthkit_meteo-0.1.0.tar.gz", hash = "sha256:10d251026c0f65215ddb46c3bfb14a3e3269e0fd89a468ad1b3990bddaaf8b56"},
+]
+
+[package.dependencies]
+numpy = "*"
+
+[package.extras]
+test = ["pytest", "pytest-cov"]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.2.1"
 description = "Backport of PEP 654 (exception groups)"
@@ -1707,6 +1724,20 @@ anyio = ">=3.4.0,<5"
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
 
 [[package]]
+name = "thermofeel"
+version = "2.0.0"
+description = "A library to calculate human thermal comfort indexes"
+optional = false
+python-versions = "*"
+files = [
+    {file = "thermofeel-2.0.0.tar.gz", hash = "sha256:aee4e831e3c8ab91462f467dd8e937a8bf58d7f5c1c0312d7863be062bf25144"},
+]
+
+[package.dependencies]
+earthkit-meteo = ">=0.0.1"
+numpy = "*"
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -1988,4 +2019,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "d7ec486b6b9202948ee409aec34911a0d0b6ec97a88ac07fab84c90d4453a483"
+content-hash = "ca72d27f3bc53439700f699506bb4a69edcfce3dbbca1506566218d195c4d479"
