@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.0 (2024-07-26)
+
+### Feature
+
+- Add ventelation estimation (#28) ([`973a918`](https://github.com/34j/ud-co2s/commit/973a9187d0aca3dc4391569616222dc40dbc410b))
+
 ## v0.2.2 (2024-07-17)
 
 ### Fix
