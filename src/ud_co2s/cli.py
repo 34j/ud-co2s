@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import threading
 from datetime import datetime
 from logging import getLogger
@@ -28,7 +30,7 @@ except Exception as e:
 global pystray_icon
 global current_data
 current_data: CO2Data
-pystray_icon: "pystray.Icon"
+pystray_icon: pystray.Icon
 app = typer.Typer()
 
 
