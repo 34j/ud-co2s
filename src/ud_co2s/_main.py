@@ -25,10 +25,12 @@ class CO2Data:
 
     @property
     def temperature_calibrated(self) -> float:
+        """The calibrated temperature in degrees Celsius."""
         return self.temperature - 4.5
 
     @property
     def humidity_calibrated(self) -> float:
+        """The calibrated humidity in percent."""
         abs_humidity = (
             216.7
             * (

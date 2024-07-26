@@ -12,6 +12,11 @@ import typer
 import unhandled_exit
 from PIL import Image, ImageDraw, ImageFont
 from rich.console import Console
+from thermofeel import (
+    calculate_heat_index_simplified,
+    celsius_to_kelvin,
+    kelvin_to_celsius,
+)
 
 from ._main import CO2Data, read_co2
 
@@ -110,8 +115,31 @@ def _main_task(
             ventelation_per_hour = (
                 (co2_per_hour - co2_per_hour_est) / (data.co2_ppm - out_ppm) * 1e6
             )
+        heat_index = kelvin_to_celsius(
+            calculate_heat_index_simplified(
+                np.array([celsius_to_kelvin(data.temperature_calibrated)]),
+                np.array([data.humidity_calibrated]),
+            )[0]
+        )
+        heat_index_level = {
+            float("-inf"): ("OK", "ffffff"),
+            27: ("Caution", "ffff66"),
+            32: ("Extreme caution", "ffd700"),
+            41: ("Danger", "ff8c00"),
+            54: ("Extreme danger", "ff0000"),
+        }
+        heat_index_level_idx = max(
+            [level for level in heat_index_level if heat_index >= level]
+        )
+        heat_index_level_name, heat_index_level_color = heat_index_level[
+            heat_index_level_idx
+        ]
+        # net = kelvin_to_celsius(calculate_normal_effective_temperature(
+        # celsius_to_kelvin(data.temperature_calibrated), 0, data.humidity_calibrated))
         c.print(
             f"CO2: {data.co2_ppm} ppm, "
+            f"Heat Index: [#{heat_index_level_color}]"
+            f"{heat_index:.1f} \\[{heat_index_level_name}][/], "
             f"Humidity: {data.humidity_calibrated:.1f}%, "
             f"Temperature: {data.temperature_calibrated:.1f}°C"
             + (
@@ -145,7 +173,7 @@ def _main_task(
             ppms.append(data.co2_ppm)
             dates.append(pd.Timestamp.now())
             dates_formatted.append(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
-            if len(ppms) > 2:
+            if len(ppms) > 1:
                 try:
                     plt.clear_figure()
                     plt.canvas_color("black")
@@ -169,6 +197,7 @@ def _main_task(
                 data.co2_ppm, background_color=background_color
             )
             pystray_icon.title = (
+                f"HI: {heat_index:.1f}, "
                 f"{data.temperature_calibrated:.1f}°C, {data.humidity_calibrated:.1f}%"
             )
 

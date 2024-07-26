@@ -38,6 +38,7 @@ pystray = "^0.19.5"
 seaborn = "^0.13.2"
 unhandled-exit = "^1.0.0"
 pandas = "^2.2.2"
+thermofeel = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0"
