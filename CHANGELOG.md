@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.1 (2024-08-17)
+
+### Fix
+
+- Update dependency typer to v0.12.4 (#42) ([`97992b9`](https://github.com/34j/ud-co2s/commit/97992b9ea5c17420d5c4ddc93f23a1cddc984859))
+
 ## v0.3.0 (2024-07-26)
 
 ### Feature
