@@ -42,7 +42,7 @@ thermofeel = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0"
-pytest-cov = "^3.0"
+pytest-cov = "^5.0.0"
 
 [tool.poetry.group.docs]
 optional = true
