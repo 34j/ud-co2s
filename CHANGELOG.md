@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.4 (2024-09-10)
+
+### Fix
+
+- Update dependency rich to v13.8.1 (#51) ([`c7c8f6f`](https://github.com/34j/ud-co2s/commit/c7c8f6f439e0e4469b7593711efc023475c9ad11))
+
 ## v0.3.3 (2024-08-26)
 
 ### Fix
