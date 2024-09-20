@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.5 (2024-09-20)
+
+### Fix
+
+- Update dependency pandas to v2.2.3 (#54) ([`40148b9`](https://github.com/34j/ud-co2s/commit/40148b947b5d2dc88b41a90678bfb0d369cbcc14))
+
 ## v0.3.4 (2024-09-10)
 
 ### Fix
