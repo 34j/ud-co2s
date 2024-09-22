@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.6 (2024-09-22)
+
+### Fix
+
+- Update dependency plotext to v5.3.1 (#55) ([`e868aba`](https://github.com/34j/ud-co2s/commit/e868aba1e3314531d56f6b4b9f71fa4934c8d95f))
+
 ## v0.3.5 (2024-09-20)
 
 ### Fix
