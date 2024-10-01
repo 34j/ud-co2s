@@ -15,7 +15,7 @@ from sphinx.ext import apidoc
 project = "IODATA UD-CO2S Sensor Data Reader"
 copyright = "2024, 34j"
 author = "34j"
-release = "0.3.7"
+release = "0.3.8"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
