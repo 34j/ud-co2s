@@ -41,7 +41,7 @@ pandas = "^2.2.2"
 thermofeel = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.0"
+pytest = "^8.0.0"
 pytest-cov = "^3.0"
 
 [tool.poetry.group.docs]
