@@ -58,6 +58,12 @@ ud-co2s --plot --log
 
 ![Icon](docs/_static/icon.png)
 
+In Linux you may additionally need to set permissions for the serial device:
+
+```shell
+sudo chmod 666 /dev/ttyACM0
+```
+
 ## Run on startup
 
 ```shell
