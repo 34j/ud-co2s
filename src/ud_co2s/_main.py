@@ -3,7 +3,7 @@ from __future__ import annotations
 import itertools
 import re
 import warnings
-from typing import AsyncIterable, Iterable
+from collections.abc import AsyncIterable, Iterable
 
 import aioserial
 import attrs
