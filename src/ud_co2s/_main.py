@@ -3,7 +3,7 @@ from __future__ import annotations
 import itertools
 import re
 import warnings
-from typing import AsyncIterable, Iterable
+from collections.abc import AsyncIterable, Iterable
 
 import aioserial
 import attrs
@@ -59,7 +59,9 @@ class CO2Data:
 
 def _find_port() -> str:
     candidates = [
-        port for port in serial.tools.list_ports.comports() if "USB" in port.description
+        port
+        for port in serial.tools.list_ports.comports()
+        if "USB" in port.description or "UD-CO2S" in port.description
     ]
     if not candidates:
         raise RuntimeError("No suitable port found")
