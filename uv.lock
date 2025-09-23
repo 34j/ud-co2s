@@ -1496,7 +1496,7 @@ wheels = [
 
 [[package]]
 name = "ud-co2s"
-version = "0.4.0"
+version = "1.0.0rc1"
 source = { editable = "." }
 dependencies = [
     { name = "aioserial" },

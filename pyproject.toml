@@ -4,7 +4,7 @@ requires = [ "setuptools" ]
 
 [project]
 name = "ud-co2s"
-version = "0.4.0"
+version = "1.0.0-rc.1"
 description = "Python package for reading sensor data from IODATA UD-CO2S or Pocket CO2 Sensor"
 readme = "README.md"
 license = { text = "MIT" }
