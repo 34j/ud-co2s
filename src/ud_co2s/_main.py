@@ -107,6 +107,7 @@ def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data
     port = port or _find_port()
 
     # connect to the sensor
+    seri = None
     try:
         with serial.Serial(
             port=port,
@@ -136,8 +137,18 @@ def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data
                     humidity=float(match.group(2)),
                     temperature=float(match.group(3)),
                 )
+    except serial.SerialException as e:
+        msg = str(e)
+        if "denied" in msg:
+            raise PermissionError(
+                "Run `sudo chmod 666 /dev/ttyACM0` or similar. \n" + msg
+            ) from e
+        raise
+    except Exception:
+        raise
     finally:
-        seri.write(b"STP\r\n")
+        if seri is not None:
+            seri.write(b"STP\r\n")
 
 
 async def read_co2_async(
