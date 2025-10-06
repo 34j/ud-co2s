@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.0-rc.1 (2025-10-06)
+
+### Features
+
+- Use tenacity ([`5a94db9`](https://github.com/34j/ud-co2s/commit/5a94db9c323e262a92508524e357ada0dc2c2991))
+- Use tenacity ([`0476d80`](https://github.com/34j/ud-co2s/commit/0476d80573812af8d1ef6cb4769b5b3ab553cc3f))
+- Use tenacity ([`ad5ae68`](https://github.com/34j/ud-co2s/commit/ad5ae68ea746d968b03a11e5c36dfeca6bd87954))
+
 ## v1.0.0 (2025-09-24)
 
 ## v0.4.0 (2025-09-22)
