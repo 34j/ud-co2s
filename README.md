@@ -64,6 +64,16 @@ In Linux you may additionally need to set permissions for the serial device:
 sudo chmod 666 /dev/ttyACM0
 ```
 
+or
+
+```shell
+sudo usermod -aG dialout $USER
+```
+
+```nix
+users.users.<name>.extraGroups = [ "dialout" ];
+```
+
 ## Run on startup
 
 ### Windows
