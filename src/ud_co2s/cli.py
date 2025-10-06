@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import threading
 from datetime import datetime
-from logging import getLogger
+from logging import ERROR, basicConfig, getLogger
 from pathlib import Path
 from typing import Annotated
 
@@ -14,6 +14,14 @@ import typer
 import unhandled_exit
 from PIL import Image, ImageDraw, ImageFont
 from rich.console import Console
+from rich.logging import RichHandler
+from tenacity import (
+    after_log,
+    before_sleep_log,
+    retry,
+    retry_if_not_exception_type,
+    wait_fixed,
+)
 from thermofeel import (
     calculate_heat_index_simplified,
     celsius_to_kelvin,
@@ -22,7 +30,10 @@ from thermofeel import (
 
 from ._main import CO2Data, read_co2
 
-LOG = getLogger(__name__)
+basicConfig(
+    handlers=[RichHandler(rich_tracebacks=True)],
+)
+LOG = getLogger("ud-co2s")
 try:
     import pystray
 except Exception as e:
@@ -68,6 +79,12 @@ def _create_icon_image(
     return image
 
 
+@retry(
+    before_sleep=before_sleep_log(LOG, ERROR),
+    after=after_log(LOG, ERROR),
+    wait=wait_fixed(0.1),
+    retry=retry_if_not_exception_type(KeyboardInterrupt),
+)
 def _main_task(
     once: bool,
     plot: bool,
