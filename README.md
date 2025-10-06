@@ -84,6 +84,25 @@ users.users.<name>.extraGroups = [ "dialout" ];
 ud-co2s
 ```
 
+### NixOS
+
+```nix
+{...}:
+{
+  systemd.user.services.ud-co2s = {
+    Unit = {
+      Description = "UD-CO2S Service (CO2 Sensor Data Logger)";
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+    Service = {
+        ExecStart = "uvx ud-co2s";
+    };
+  };
+}
+```
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
