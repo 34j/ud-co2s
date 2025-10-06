@@ -66,20 +66,12 @@ sudo chmod 666 /dev/ttyACM0
 
 ## Run on startup
 
-```shell
-npm install -g nodemon
-```
+### Windows
 
 `%appdata%/Microsoft/Windows/Start Menu/Programs/Startup/ud-co2s.bat`:
 
 ```shell
-nodemon -x "ud-co2s --log --plot --icon --log-path %localappdata%/ud-co2s/ud-co2s.log || touch %localappdata%/ud-co2s/ud-co2s.lock" --watch "%LOCALAPPDATA%/ud-co2s/ud-co2s.lock"
-```
-
-(If powershell):
-
-```shell
-nodemon -x "ud-co2s --log --plot --icon --log-path %localappdata%/ud-co2s/ud-co2s.log || touch %localappdata%/ud-co2s/ud-co2s.lock" --watch "$env:LOCALAPPDATA/ud-co2s/ud-co2s.lock"
+ud-co2s
 ```
 
 ## Contributors ✨
