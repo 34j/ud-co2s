@@ -47,7 +47,7 @@ scripts.ud-co2s = "ud_co2s.cli:app"
 
 [dependency-groups]
 dev = [
-  "pytest>=8,<9",
+  "pytest>=9,<10",
   "pytest-asyncio>=1.2.0",
   "pytest-cov>=6,<7",
 ]
