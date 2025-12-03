@@ -49,7 +49,7 @@ scripts.ud-co2s = "ud_co2s.cli:app"
 dev = [
   "pytest>=9,<10",
   "pytest-asyncio>=1.2.0",
-  "pytest-cov>=6,<7",
+  "pytest-cov>=7,<8",
 ]
 docs = [
   "furo>=2023.5.20; python_version>='3.11'",
