@@ -38,8 +38,7 @@ try:
     import pystray
 except Exception as e:
     LOG.exception(e)
-global pystray_icon
-global current_data
+global pystray_icon, current_data
 current_data: CO2Data
 pystray_icon: pystray.Icon
 app = typer.Typer()
@@ -69,9 +68,7 @@ def _create_icon_image(
     if two_lines:
         margin = (-4, -8)
         dc.text((margin[0], margin[1]), f"{value // 100:0>2}", fill=color, font=font)
-        dc.text(
-            (margin[0], 32 + margin[1]), f"{value % 100:0>2}", fill=color, font=font
-        )
+        dc.text((margin[0], 32 + margin[1]), f"{value % 100:0>2}", fill=color, font=font)
     else:
         dc.text((-4, 15), f"{value}", fill=color, font=font)
 
@@ -147,12 +144,8 @@ def _main_task(
             41: ("Danger", "ff8c00"),
             54: ("Extreme danger", "ff0000"),
         }
-        heat_index_level_idx = max(
-            [level for level in heat_index_level if heat_index >= level]
-        )
-        heat_index_level_name, heat_index_level_color = heat_index_level[
-            heat_index_level_idx
-        ]
+        heat_index_level_idx = max([level for level in heat_index_level if heat_index >= level])
+        heat_index_level_name, heat_index_level_color = heat_index_level[heat_index_level_idx]
         # net = kelvin_to_celsius(calculate_normal_effective_temperature(
         # celsius_to_kelvin(data.temperature_calibrated), 0, data.humidity_calibrated))
         c.print(
@@ -194,27 +187,24 @@ def _main_task(
             dates_formatted.append(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
             if len(ppms) > 1:
                 try:
-                    plt.clear_figure()
-                    plt.canvas_color("black")
-                    plt.axes_color("black")
-                    plt.ticks_color("white")
-                    plt.plot_size(height=(plt.terminal_height() or 10) - 2)
-                    plt.date_form("Y/m/d H:M:S")
-                    plt.plot(dates_formatted, ppms)
-                    plt.show()
+                    plt.clear_figure()  # ty: ignore[unresolved-attribute]
+                    plt.canvas_color("black")  # ty: ignore[unresolved-attribute]
+                    plt.axes_color("black")  # ty: ignore[unresolved-attribute]
+                    plt.ticks_color("white")  # ty: ignore[unresolved-attribute]
+                    plt.plot_size(height=(plt.terminal_height() or 10) - 2)  # ty: ignore[unresolved-attribute]
+                    plt.date_form("Y/m/d H:M:S")  # ty: ignore[unresolved-attribute]
+                    plt.plot(dates_formatted, ppms)  # ty: ignore[unresolved-attribute]
+                    plt.show()  # ty: ignore[unresolved-attribute]
                 except Exception as e:
                     c.print(e)
         if icon:
-            global pystray_icon
-            global current_data
+            global pystray_icon, current_data
             current_data = data
             background_color = (0, 0, 0, 0)
             if pystray_icon.HAS_NOTIFICATION:
                 if data.co2_ppm > notify_ppm:
                     background_color = (255, 0, 0, 255)
-            pystray_icon.icon = _create_icon_image(
-                data.co2_ppm, background_color=background_color
-            )
+            pystray_icon.icon = _create_icon_image(data.co2_ppm, background_color=background_color)
             pystray_icon.title = (
                 f"HI: {heat_index:.1f}, "
                 f"{data.temperature_calibrated:.1f}°C, {data.humidity_calibrated:.1f}%"
@@ -226,9 +216,7 @@ def _main(
     once: Annotated[bool, typer.Option(help="Only get values once")] = False,
     plot: Annotated[bool, typer.Option(help="Plot the values")] = True,
     log: Annotated[bool, typer.Option(help="Log the values")] = True,
-    log_path: Annotated[Path, typer.Option(help="Path to the log file")] = Path(
-        "ud-co2s.log"
-    ),
+    log_path: Annotated[Path, typer.Option(help="Path to the log file")] = Path("ud-co2s.log"),
     port: Annotated[str, typer.Option(help="The serial port to use")] = "",
     icon: Annotated[bool, typer.Option(help="Show the icon")] = True,
     notify_ppm: Annotated[int, typer.Option(help="The CO2 ppm to notify")] = 1000,
@@ -236,9 +224,7 @@ def _main(
     unhandled_exit.activate()
     if icon:
         global pystray_icon
-        pystray_icon = pystray.Icon(
-            "UD-CO2S", icon=_create_icon_image(0), title="UD-CO2S"
-        )
+        pystray_icon = pystray.Icon("UD-CO2S", icon=_create_icon_image(0), title="UD-CO2S")
         pystray_icon.menu = pystray.Menu(
             *(
                 [
