@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import itertools
+import math
 import re
 import warnings
 from collections.abc import AsyncIterable, Iterable
@@ -37,7 +38,7 @@ class CO2Data:
                 self.humidity
                 / 100
                 * 6.112
-                * pow(2.71828, (17.62 * self.temperature) / (243.12 + self.temperature))
+                * pow(math.e, (17.62 * self.temperature) / (243.12 + self.temperature))
             )
             / (273.15 + self.temperature)
         )
@@ -47,9 +48,8 @@ class CO2Data:
                 216.7
                 * 6.112
                 * pow(
-                    2.71828,
-                    (17.62 * self.temperature_calibrated)
-                    / (243.12 + self.temperature_calibrated),
+                    math.e,
+                    (17.62 * self.temperature_calibrated) / (243.12 + self.temperature_calibrated),
                 )
             )
             * 100
@@ -65,7 +65,7 @@ def _find_port() -> str:
     ]
     if not candidates:
         raise RuntimeError("No suitable port found")
-    elif len(candidates) > 1:
+    if len(candidates) > 1:
         warnings.warn(
             f"Multiple candidates found: {candidates}, "
             "using the first one,"
@@ -127,9 +127,7 @@ def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data
                     break
                 text = seri.read_until(b"\r\n")
                 # CO2=1000,HUM=50.0,TMP=25.0
-                match = re.match(
-                    r"CO2=(\d+),HUM=(\d+\.\d+),TMP=(\d+\.\d+)", text.decode()
-                )
+                match = re.match(r"CO2=(\d+),HUM=(\d+\.\d+),TMP=(\d+\.\d+)", text.decode())
                 if not match:
                     raise RuntimeError(f"Invalid data: {text}")
                 yield CO2Data(
@@ -140,9 +138,7 @@ def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data
     except serial.SerialException as e:
         msg = str(e)
         if "denied" in msg:
-            raise PermissionError(
-                "Run `sudo chmod 666 /dev/ttyACM0` or similar. \n" + msg
-            ) from e
+            raise PermissionError("Run `sudo chmod 666 /dev/ttyACM0` or similar. \n" + msg) from e
         raise
     except Exception:
         raise
@@ -151,9 +147,7 @@ def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data
             seri.write(b"STP\r\n")
 
 
-async def read_co2_async(
-    count: int | None = 1, port: str | None = None
-) -> AsyncIterable[CO2Data]:
+async def read_co2_async(count: int | None = 1, port: str | None = None) -> AsyncIterable[CO2Data]:
     """
     Read CO2 data from the sensor.
 

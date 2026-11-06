@@ -1,22 +1,20 @@
 # Changes here will be overwritten by Copier
-_commit: 2e4f7d0
-_src_path: gh:34j/pypackage-template
-cli_name: ud-co2s
+_commit: cba0ccb
+_src_path: gh:34j/pypackage-template-fork
 copyright_year: '2024'
 documentation: true
-email: 34j.95a2p@simplelogin.com
-full_name: 34j
-github_username: 34j
+github_user: 34j
 has_cli: true
 initial_commit: false
-is_django_package: false
+module_name: ud_co2s
 open_source_license: MIT
 open_with_editor: false
-package_name: ud_co2s
 project_name: IODATA UD-CO2S Sensor Data Reader
 project_short_description: Python package for reading sensor data from IODATA UD-CO2S
     or Pocket CO2 Sensor
 project_slug: ud-co2s
 run_uv_sync: false
 setup_pre_commit: false
+user_name: 34j
+version: 1.1.0
 
