@@ -82,6 +82,17 @@ def _create_icon_image(
     wait=wait_fixed(0.1),
     retry=retry_if_not_exception_type(KeyboardInterrupt),
 )
+def _show_plot(dates_formatted: list[str], ppms: list[int]) -> None:
+    plt.clear_figure()  # ty: ignore[unresolved-attribute]
+    plt.canvas_color("black")  # ty: ignore[unresolved-attribute]
+    plt.axes_color("black")  # ty: ignore[unresolved-attribute]
+    plt.ticks_color("white")  # ty: ignore[unresolved-attribute]
+    plt.plot_size(height=(plt.terminal_height() or 10) - 2)  # ty: ignore[unresolved-attribute]
+    plt.date_form("Y/m/d H:M:S")  # ty: ignore[unresolved-attribute]
+    plt.plot(dates_formatted, ppms)  # ty: ignore[unresolved-attribute]
+    plt.show()  # ty: ignore[unresolved-attribute]
+
+
 def _main_task(
     once: bool,
     plot: bool,
@@ -187,14 +198,7 @@ def _main_task(
             dates_formatted.append(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
             if len(ppms) > 1:
                 try:
-                    plt.clear_figure()  # ty: ignore[unresolved-attribute]
-                    plt.canvas_color("black")  # ty: ignore[unresolved-attribute]
-                    plt.axes_color("black")  # ty: ignore[unresolved-attribute]
-                    plt.ticks_color("white")  # ty: ignore[unresolved-attribute]
-                    plt.plot_size(height=(plt.terminal_height() or 10) - 2)  # ty: ignore[unresolved-attribute]
-                    plt.date_form("Y/m/d H:M:S")  # ty: ignore[unresolved-attribute]
-                    plt.plot(dates_formatted, ppms)  # ty: ignore[unresolved-attribute]
-                    plt.show()  # ty: ignore[unresolved-attribute]
+                    _show_plot(dates_formatted, ppms)
                 except Exception as e:
                     c.print(e)
         if icon:

@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.2.0 (2026-11-06)
+
+### Documentation
+
+- Update docs ([`17010e9`](https://github.com/34j/ud-co2s/commit/17010e9))
+
+### Features
+
+- Apply latest template ([`cfbc34c`](https://github.com/34j/ud-co2s/commit/cfbc34cc1b57779b6f7caecb6a5684ab947826a2))
+
 ## v1.1.0 (2025-10-06)
 
 ### Features

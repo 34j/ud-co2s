@@ -76,6 +76,26 @@ def _find_port() -> str:
     return candidates[0].device
 
 
+def _read_co2_serial(seri: serial.Serial, count: int | None) -> Iterable[CO2Data]:
+    seri.write(b"STA\r\n")
+    status = seri.read_until(b"\r\n")
+    if "STA" not in status.decode():
+        raise RuntimeError(f"Invalid status: {status}")
+
+    for i in itertools.count():
+        if count is not None and i >= count:
+            break
+        text = seri.read_until(b"\r\n")
+        match = re.match(r"CO2=(\d+),HUM=(\d+\.\d+),TMP=(\d+\.\d+)", text.decode())
+        if not match:
+            raise RuntimeError(f"Invalid data: {text}")
+        yield CO2Data(
+            co2_ppm=int(match.group(1)),
+            humidity=float(match.group(2)),
+            temperature=float(match.group(3)),
+        )
+
+
 def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data]:
     """
     Read CO2 data from the sensor.
@@ -106,35 +126,10 @@ def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data
     # find the port
     port = port or _find_port()
 
-    # connect to the sensor
     seri = None
     try:
-        with serial.Serial(
-            port=port,
-            baudrate=9600,
-            bytesize=8,
-        ) as seri:
-            # Reset the sensor
-            # seri.write(b"STP\r\n")
-            seri.write(b"STA\r\n")
-            status = seri.read_until(b"\r\n")
-            if "STA" not in status.decode():
-                raise RuntimeError(f"Invalid status: {status}")
-
-            # read the CO2 data
-            for i in itertools.count():
-                if count is not None and i >= count:
-                    break
-                text = seri.read_until(b"\r\n")
-                # CO2=1000,HUM=50.0,TMP=25.0
-                match = re.match(r"CO2=(\d+),HUM=(\d+\.\d+),TMP=(\d+\.\d+)", text.decode())
-                if not match:
-                    raise RuntimeError(f"Invalid data: {text}")
-                yield CO2Data(
-                    co2_ppm=int(match.group(1)),
-                    humidity=float(match.group(2)),
-                    temperature=float(match.group(3)),
-                )
+        seri = serial.Serial(port=port, baudrate=9600, bytesize=8)
+        yield from _read_co2_serial(seri, count)
     except serial.SerialException as e:
         msg = str(e)
         if "denied" in msg:
@@ -145,6 +140,7 @@ def read_co2(count: int | None = 1, port: str | None = None) -> Iterable[CO2Data
     finally:
         if seri is not None:
             seri.write(b"STP\r\n")
+            seri.close()
 
 
 async def read_co2_async(count: int | None = 1, port: str | None = None) -> AsyncIterable[CO2Data]:

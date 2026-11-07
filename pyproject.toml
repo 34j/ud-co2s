@@ -58,8 +58,14 @@ docs = [
 
 [tool.ruff]
 extend = ".venv/ruff.toml"
-lint.per-file-ignores."docs/conf.py" = [ "A001", "D401" ]
-lint.per-file-ignores."src/ud_co2s/_main.py" = [ "DOC202", "DOC501", "PLW0717", "RET504", "TRY301" ]
+lint.per-file-ignores."docs/conf.py" = [ "A001", "D401", "F403" ]
+lint.per-file-ignores."src/ud_co2s/_main.py" = [
+  "DOC202",
+  "DOC501",
+  "DOC502",
+  "RET504",
+  "TRY301",
+]
 lint.per-file-ignores."src/ud_co2s/cli.py" = [
   "BLE001",
   "C419",
@@ -74,7 +80,6 @@ lint.per-file-ignores."src/ud_co2s/cli.py" = [
   "PLW0602",
   "PLW0603",
   "PLW0604",
-  "PLW0717",
   "PLW1514",
   "SIM102",
   "TRY401",
