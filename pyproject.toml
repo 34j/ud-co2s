@@ -47,7 +47,7 @@ scripts.ud-co2s = "ud_co2s.cli:app"
 dev = [
   "coverage",
   "packaging-34j[test]>=1.1.3",
-  "pytest>=9",
+  "pytest>=9.2.0",
   "pytest-asyncio>=1.2",
   "pytest-cov>=7",
   "ty",
