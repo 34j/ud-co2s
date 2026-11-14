@@ -48,7 +48,7 @@ dev = [
   "coverage",
   "packaging-34j[test]>=1.1.3",
   "pytest>=9",
-  "pytest-asyncio>=1.2",
+  "pytest-asyncio>=1.5.0",
   "pytest-cov>=7",
   "ty",
 ]
